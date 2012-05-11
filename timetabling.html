@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}作息时间表{% endblock%}
+{% block content %}
+<div id='timetable'>
+	<table border="1"> 
+		<tr>
+			<th></br></th>
+			<th>时间</th>
+		</tr>
+		{% for t in timetable %}
+			<tr>
+				<th>{{ t.ix }}</th>
+				<th>{{ t.time }}</th>
+			</tr>
+		{% endfor %}
+	</table>
+</div>
+<div id="input">
+<form action='/course/TimeTable' method='post'>
+<pre>
+   	
+名称:       <input type='text' name='ix'/>
+时间:       <input type='text' name='time'/>
+	        <input type='submit' value='添加'/>
+</pre>
+</form> 
+</div>
+{% endblock %}

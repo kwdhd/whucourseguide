@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}建立课程表{% endblock%}
+{% block content %}
+<div id="all_courses">
+<form action='/course/AddSchedule' method='post'>
+<pre><table border="1px" width="550px">
+		<tr>
+			<th></br></th><th>名称</th><th>教学楼</th><th>教室</th><th>周</th><th>时间</th><th>星期</th>
+		</tr>
+	{% ifequal count 0 %}
+		</table>
+		<p>还没有添加课程!</p>
+	{% else %}
+		{% for c in selected%}
+			<tr>
+				<th><input type="checkbox" name="courses"  {{c.0}} value ="{{c.1.key}}" ></th><th>{{c.1.coursename}}</th><th>{{c.1.building.buildingname}}</th><th>{{c.1.classroom}}</th><th>{{c.1.start_week}}周至{{c.1.end_week}}周</th><th>{{c.1.start_time}}节至{{c.1.end_time}}节</th><th>{{c.1.weekdays}}</th>
+			</tr>
+		{% endfor%}
+		</table>
+		                                                                <input type="submit" value="修改"/></br>
+	{% endifequal %}
+	</pre>
+</form>
+
+</div>
+ {% endblock %}

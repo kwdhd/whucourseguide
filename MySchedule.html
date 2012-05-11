@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{user.nickname}}的课程表{% endblock%}
+{% block content %}
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&language=zh-CN&region=cn"></script>
+<script type="text/javascript" src="/js/helper.js" charset="utf-8"></script>
+	<div id='courses'>
+	<table border="1" width="550px"> 
+		<tr>
+			<th>课程</th>
+			<th>教学楼</th>
+			<th>教室</th>
+			<th>周</th>
+			<th>时间</th>
+			<th>星期</th>
+			<th id='lat'>building.lat </th>
+			<th id='lng'>building.lng </th>
+		</tr>
+		{% for c in selected %}
+			<tr onclick="MoveToBuilding(this)">
+				<th id="coursename">{{ c.course.coursename }}</th>
+				<th id="buildingname">{{ c.course.building.buildingname }}</th>
+				<th >{{ c.course.classroom }}</th>
+				<th>{{ c.course.start_week }}周至{{ c.course.end_week }}周</th>
+				<th>{{ c.course.start_time }}节至{{ c.course.end_time }}节</th>
+				<th>{{ c.course.weekdays }}</th>
+				<th id='lat'>{{ c.course.building.lat }}</th>
+				<th id='lng'>{{ c.course.building.lng}}</th>
+			</tr>
+		{% endfor %}
+	</table>
+	</div>
+	<div id='map_canvas' style="width:100%; height:80%"></div>
+ {% endblock %}

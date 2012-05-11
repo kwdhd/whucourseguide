@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<title>{% block title%} {% endblock %}</title>		
+		<link type="text/css" rel="stylesheet" href="/stylesheets/layout.css">
+	</head>
+	<body>
+		<div id="container">
+			<div id="header">{% block header %} {% endblock %}</div>
+			<div id="mainContent">
+				<div id="sidebar">
+				{% block navi %} 
+					{% if user %}
+					<b>欢迎: {{ user.nickname }}</b>
+					{% else %}
+					<b>please login!</b>
+			        {% endif %}
+			        </br>
+					<a href="{{ url }}">{{ url_linktext }}</a>
+					<ul>
+						<li><a href='/course'>首页</a></li>
+		                <br/>
+		                <li><a href='/course/AddBuilding'>添加教学楼</a></li>
+		                <br/>
+		                <li><a href='/course/AddCourse'>添加课程</a></li>
+		                <br/>
+		                <li><a href='/course/AddSchedule'>建立课程表</a></li>
+		                <br/>
+		                <li><a href='/course/MySchedule'>我的课程表</a></li>
+		                <br/>
+		                
+		            </ul>
+				{% endblock %}
+				</div>
+				<div id="content"   style="height:100%">
+				{% block content %} 
+				{% endblock %}
+				</div>
+			</div>
+			<div id="footer">{% block footer %} contact: mail....{% endblock %}</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,107 @@
+<html>
+  <head>
+  	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css"/>
+  	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&language=zh-CN&region=cn"></script>
+  	<script type="text/javascript">
+	  	 var map;
+	     // 初始化地图...
+	     function initialize(){
+	    	 HideLatLng();
+	         var Whu = new google.maps.LatLng(30.53925933944048,114.35536980628967);
+	         var myOptions = {
+	             zoom: 17,
+	             center: Whu,
+	             mapTypeId: google.maps.MapTypeId.SATELLITE
+	         };
+	         map = new google.maps.Map(document.getElementById("map_canvas"), myOptions); 
+	         // 然后在页面上添加marker
+	         AddMarkers();
+	     }
+	     //
+  		function MoveToBuilding(e){
+  			x = e.cells['lat'].innerHTML.toString();
+  			y = e.cells['lng'].innerHTML.toString();
+  			var location = new google.maps.LatLng(parseFloat(x),parseFloat(y));
+  			map.setCenter(location);
+  			map.setZoom(19);
+  		}
+	  	// 把教学楼标注到地图上~
+	  	function AddMarkers()
+	  	{
+	  		rows = document.getElementsByTagName("tr");
+	  		// 从第二行开始
+	  		for(i=1; i< rows.length; i++){
+	  			name = rows[i].cells['buildingname'].innerHTML.toString();
+	  			lat = rows[i].cells["lat"].innerHTML.toString();
+	  			lng = rows[i].cells["lng"].innerHTML.toString();
+	  			//alert(name);
+		  		var location = new google.maps.LatLng(parseFloat(lat),parseFloat(lng));
+		  		var marker = new google.maps.Marker({
+					  position: location,
+					  map: map,
+					  title: name
+				});
+	  		};
+	  	}
+	  	// 
+	  	google.maps.event.addDomListener(window, 'load', initialize);
+	  	// 隐藏 坐标列
+	  	function HideLatLng(){
+	  		rows = document.getElementsByTagName("tr");
+	  		for(i=0; i < rows.length; i++){
+	  			rows[i].cells["lat"].style.display = "none";
+	  			rows[i].cells["lng"].style.display = "none";
+	  		}
+	  	}  
+	  	</script>
+  </head>
+  <body>
+  <div id="schedule">
+  	{% comment %}
+    {% for greeting in greetings %}
+      {% if greeting.author %}
+        <b>{{ greeting.author.nickname }}</b> wrote:
+      {% else %}
+       An anonymous person wrote:
+      {% endif %}
+      <blockquote>{{ greeting.content|escape }}</blockquote>
+    {% endfor %}
+	{% endcomment %}
+	{% if user %}
+		<b>welcom: {{ user.nickname }}</b>
+	{% else %}
+		<b>please login!</b>
+	{% endif %}
+	<a href="{{ url }}">{{ url_linktext }}</a>
+	<table border="1"> 
+			<tr>
+			<th>coursename</th>
+			<th>classroom</th>
+			<th>classroom</th>
+			<th>start_date</th>
+			<th>end_date</th>
+			<th>start_time</th>
+			<th>end_time</th>
+			<th>buildingname</th>
+			<th id='lat'>building.x </th>
+			<th id='lng'>building.y </th>
+		</tr>
+	{% for s in schedule %}
+		<tr onclick="MoveToBuilding(this)" id="ix{{ forloop.counter }}">
+			<th id="coursename">{{ s.course.coursename }}</th>
+			<th>{{ s.course.classroom }}</th>
+			<th>{{ s.course.classroom }}</th>
+			<th>{{ s.course.start_date }}</th>
+			<th>{{ s.course.end_date }}</th>
+			<th>{{ s.course.start_time }}</th>
+			<th>{{ s.course.end_time }}</th>
+			<th id="buildingname">{{ s.course.building.buildingname }}</th>
+			<th id='lat'>{{ s.course.building.x }}</th>
+			<th id='lng'>{{ s.course.building.y }}</th>
+		</tr>
+	{% endfor %}
+	</table>
+    </div>
+	<div id="map_canvas" style="width:100%; height:100%"></div>
+  </body>
+</html>

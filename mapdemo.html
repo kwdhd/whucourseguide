@@ -1,0 +1,146 @@
+<html>
+	<head>
+		<title>Google test demo...</title>
+		<style type="text/css">
+			html {height: 100%}
+			body {height: 100%; margin: 0px; padding: 0px}
+			#map_canvas {height: 100%}
+		</style>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&language=zh-CN&region=cn"></script>
+		<script type="text/javascript">
+			var map;
+			function initialize() {
+			  var myLatlng = new google.maps.LatLng(50.53,114.35);
+			  var myOptions = {
+			    zoom: 4,
+			    center: myLatlng,
+			    mapTypeId: google.maps.MapTypeId.SATELLITE
+			  }
+			  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);	  
+			  google.maps.event.addListener(map, 'zoom_changed', function() {
+			    setTimeout(moveToWhu, 1000);
+			  });
+
+			  var marker = new google.maps.Marker({
+			      position: myLatlng, 
+			      map: map,
+			      title:"Hello World!"
+			  });
+			  google.maps.event.addListener(marker, 'click', function() {
+			    map.setZoom(8);
+			  });
+			  
+			  google.maps.event.addListener(map,'click',function(event){
+				  placeMarker(event.latLng);
+			  });
+			  
+			  var southWest = new google.maps.LatLng(-31, 125);
+			  var northEast = new google.maps.LatLng(-25, 131);
+			  var bounds = new google.maps.LatLngBounds(southWest, northEast);
+			  map.fitBounds(bounds);
+			  var lngSpan = northEast.lng() - southWest.lng();
+			  var latSpan = northEast.lat() - southWest.lat();
+			  for(var i = 0; i < 5; i++){
+				  var location = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
+						  southWest.lng() + lngSpan * Math.random());
+				  var marker = new google.maps.Marker({
+					  position: location,
+					  map: map
+				  });
+				  var j = i + 1;
+				  marker.setTitle(j.toString());
+				  attachSecretMessage(marker, i);
+			  }
+			  
+			  
+			  var zoomlevel;
+			  var infowindow = new google.maps.InfoWindow({
+				  content: 'Zoom Level test',
+				  size: new google.maps.Size(50,50),
+				  position: myLatlng
+			  });
+			  infowindow.open(map);
+			  
+			  google.maps.event.addListener(map, 'zoom_changed', function(){
+				  zoomlevel = map.getZoom();
+				  infowindow.setContent("Zoom: " + zoomlevel);
+				  if(zoomlevel == 0)
+					  map.setZoom(10);
+			  })
+		}
+			// 在marker上附加信息...
+			function attachSecretMessage(marker, number){
+				var message = ["This","is","the","secret","message"];
+				var infowindow = new google.maps.InfoWindow({
+					content: message[number],
+					size: new google.maps.Size(50,50)
+				});
+				google.maps.event.addListener(marker, 'click', function(){
+					infowindow.open(map,marker);
+				});
+			}
+			// 在地图上放置标签...
+			function placeMarker(location){
+				var marker = new google.maps.Marker({
+					position: location,
+					map: map
+				});
+				marker.setTitle('latlng: ' + location);
+				//alert('1');
+				var infowindow = new google.maps.InfoWindow({
+					content: location.toString(),
+			        size: new google.maps.Size(50,50)
+			    });
+				//alert('2');
+				google.maps.event.addListener(marker, 'click', function() {
+					//alert('infowindow');
+					infowindow.open(map,marker);
+				});
+				//alert('3');
+				map.setCenter(location);
+				// 把当前标签的经纬度显示到文本框中...
+				document.getElementById("lat").value = location.lat();
+				document.getElementById("lng").value = location.lng();
+				//alert(location);
+				//alert('4');
+			}
+			// 把地图中心移动到 whu
+			function moveToWhu() {
+			  var Whu = new google.maps.LatLng(30.53,114.35);
+			  // 只能有一个Marker?
+			  var marker = new google.maps.Marker({
+			      position: Whu, 
+			      map: map,
+			      title:"Whu!"
+			  });
+			  map.setCenter(Whu);
+			}
+			// 把地图中心移动到指定地点...
+			function MoveToLocation(map,location){
+				map.setCenter(location);
+			}
+			// 得到鼠标点击位置坐标,lat、lng是显示坐标的控件id
+			function GetClickPosition(location, lat, lng){
+				marker = new google.maps.marker({
+					position: location,
+					map: map,
+				})
+				getElementById(lat).value = location.lat();
+				getElementById(lng).value = location.lng();
+			}
+			// 点击某节课,地图定位到相应教学楼,教学楼用marker表示
+			function MoveToBuilding(marker){
+				// ...
+			}
+		</script>
+	</head>
+	<body onload='initialize()'>
+		<div id='input'>
+			<form action="/Course/AddBuilding" method="post">
+			lat: <input type="text" id="lat" readonly="readonly"/>
+			lng: <input type="text" id="lng" readonly="readonly"/>
+			</form>
+		</div>
+		<div id='map_canvas' style="width:100%; height:100%"></div>
+	</body>
+</html>
